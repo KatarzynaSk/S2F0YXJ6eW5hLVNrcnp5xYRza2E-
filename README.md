@@ -20,5 +20,5 @@ cat db_init.sql | docker exec -i local-db psql -U postgres -d postgres
 
 ```
 go build .
-./gocrud
+./fetcher
 ```
