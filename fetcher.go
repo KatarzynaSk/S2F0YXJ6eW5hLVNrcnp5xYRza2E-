@@ -60,9 +60,9 @@ func (f *fetcher) StartJob(r request) {
 	f.mux.Unlock()
 
 	go func() {
-		for {
-			ticker := time.NewTicker(time.Second * time.Duration(r.Interval))
+		ticker := time.NewTicker(time.Second * time.Duration(r.Interval))
 
+		for {
 			select {
 			case <-ticker.C:
 				fetchResult, err := f.makeRequest(r)
@@ -95,6 +95,8 @@ func (f *fetcher) makeRequest(r request) (requestResult, error) {
 	}
 
 	content, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	
 	if err != nil {
 		return fetchResult, err
 	}

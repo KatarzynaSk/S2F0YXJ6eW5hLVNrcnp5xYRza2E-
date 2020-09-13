@@ -37,11 +37,7 @@ func insertRequest(db *sqlx.DB, e request) (int, error) {
 		err = rows.Scan(&id)
 	}
 
-	if err != nil {
-		return 0, err
-	}
-
-	return id, nil
+	return id, err
 
 }
 
@@ -51,11 +47,7 @@ func deactivateRequest(db *sqlx.DB, id int) error {
 	WHERE id=$1`
 
 	_, err := db.Exec(query, id)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func selectAllActiveRequest(db *sqlx.DB) ([]request, error) {
@@ -64,11 +56,7 @@ func selectAllActiveRequest(db *sqlx.DB) ([]request, error) {
 
 	all := make([]request, 0, 0)
 	err := db.Select(&all, query)
-	if err != nil {
-		return nil, err
-	}
-
-	return all, nil
+	return all, err
 }
 
 func selectActiveRequest(db *sqlx.DB, requestID int) (*request, error) {
@@ -77,15 +65,11 @@ func selectActiveRequest(db *sqlx.DB, requestID int) (*request, error) {
 
 	var r request
 	err := db.Get(&r, query, requestID)
-	if err != nil {
-		if errors.Is(sql.ErrNoRows, err) {
-			return nil, nil
-		}
-
-		return nil, err
+	if errors.Is(sql.ErrNoRows, err) {
+		return nil, nil
 	}
 
-	return &r, nil
+	return &r, err
 }
 
 func insertRequestResult(db *sqlx.DB, r requestResult) error {
@@ -93,11 +77,7 @@ func insertRequestResult(db *sqlx.DB, r requestResult) error {
 		VALUES (:response, :duration, :request_id)`
 
 	_, err := db.NamedExec(query, r)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func selectAllRequestResult(db *sqlx.DB, requestID int) ([]requestResult, error) {
@@ -105,9 +85,6 @@ func selectAllRequestResult(db *sqlx.DB, requestID int) ([]requestResult, error)
 
 	all := make([]requestResult, 0, 0)
 	err := db.Select(&all, query, requestID)
-	if err != nil {
-		return nil, err
-	}
 
-	return all, nil
+	return all, err
 }
